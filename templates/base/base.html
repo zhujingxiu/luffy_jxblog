@@ -1,0 +1,30 @@
+{% load staticfiles %}
+
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{% block title %}base{% endblock %} 路飞博客</title>
+    <!-- Bootstrap -->
+    <link href="{% static 'lib/bootstrap3/css/bootstrap.min.css' %}" rel="stylesheet">
+    <link href="{% static 'css/base.css' %}" rel="stylesheet">
+    <!--[if lt IE 9]>
+      <script src="https://cdn.bootcss.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+      <script src="https://cdn.bootcss.com/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+    {% block css %}{% endblock %}
+    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+    <script src="{% static 'js/jquery.min.js' %}"></script>
+    <!-- Include all compiled plugins (below), or include individual files as needed -->
+    <script src="{% static 'lib/bootstrap3/js/bootstrap.min.js' %}"></script>
+</head>
+<body>
+{% include 'base/nav.html' %}
+
+{% block content %}{% endblock %}
+
+{% block js %}{% endblock %}
+</body>
+</html>

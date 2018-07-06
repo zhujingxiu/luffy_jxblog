@@ -1,0 +1,123 @@
+{% extends 'home/base.html' %}
+{% load staticfiles %}
+{% block title %} {% endblock %}
+{% block content %}
+    <div class="container bs-docs-container">
+        <div class="row">
+            <div class="col-md-9">
+                <div class="bs-docs-section ">
+                    <form class="form" action="{% url 'newarticle' %}" method="post" id="form-article">
+                        {% csrf_token %}
+                        <h2 class="page-header">添加文章</h2>
+                        <div class="bs-example ">
+                            <div class="form-group clearfix">
+                                <lable for="inputTitle">{{ form.title.label }}</lable>
+                                <input type="text" id="inputTitle" class="form-control" name="{{ form.title.html_name }}" value="{{ form.title.value }}">
+                            </div>
+                            <div class="form-group">
+                                <lable for="inputContent">{{ form.content.label }}</lable>
+                                <div id="inputContent">
+                                    {{ form.content }}
+                                </div>
+                            </div>
+                        </div>
+                        <figure class="highlight">
+                            <fieldset>
+                                <legend><h4>常用选项</h4></legend>
+                                <ol class="breadcrumb">
+                                    <li><span class="glyphicon glyphicon-tasks"></span> 个人分类</li>
+                                    <div class="pull-right">
+                                        <a id="newCategory" class="btn btn-link"><span class="glyphicon glyphicon-plus-sign"></span> 添加分类</a>
+                                    </div>
+                                    <div id="homeCatogery" class="help-tools"></div>
+                                </ol>
+                                <ol class="breadcrumb">
+                                    <li><span class="glyphicon glyphicon-cog"></span> 高级选项</li>
+                                    <div class="help-tools">
+                                        <label class="checkbox-inline">
+                                            <input type="checkbox" name="is_top"> 置顶
+                                        </label>
+                                        <label class="checkbox-inline">
+                                            <input type="checkbox" name="is_discuss"> 允许评论
+                                        </label>
+                                    </div>
+                                </ol>
+                                <ol class="breadcrumb">
+                                    <div class="help-tools">
+                                        <div class="form-group">
+                                            <div class="input-group">
+                                                <div class="input-group-addon">插入标签</div>
+                                                <input type="text" class="form-control" name="tag" placeholder="多个关键字之间用“,”分隔，最多不超过5个">
+                                                <div class="input-group-addon"><a href="">我的标签</a></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </ol>
+                            </fieldset>
+                        </figure>
+                    </form>
+                </div>
+            </div>
+            <div class="col-md-3">
+                {% include 'home/sidebar.html' %}
+            </div>
+            <div class="shortcuts-affix">
+                <button type="submit" form="form-article" class="btn btn-success btn-lg btn-block"><span class="glyphicon glyphicon-inbox"></span> 保存文章</button>
+                <button type="button" class="btn btn-info btn-lg btn-block"><span class="glyphicon glyphicon-check"></span> 存为草稿</button>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
+
+{% block js %}
+    <script type="text/javascript" src="{% static 'lib/jquery-validation/jquery.validate.min.js' %}"></script>
+    <script type="text/javascript" src="{% static 'lib/jquery-validation/messages_zh.min.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/jquery.form.js' %}"></script>
+    <script type="text/javascript">
+
+        $.validator.setDefaults({
+            errorElement : 'span',
+            errorClass : 'help-block',
+            highlight : function(element) {
+                $(element).closest('.form-group').addClass('has-error');
+            },
+            success : function(label, element) {
+                $(element).closest('.form-group').removeClass('has-error');
+                label.remove();
+            },
+            errorPlacement : function(error, element) {
+                if(error.text().length>0)
+                    layer.tips(error.text(), element,{tips: 1});
+            }
+        });
+        var load_categories = function(el){
+            $('#'+el).empty()
+            $.getJSON('{% url 'allcategory' %}',function(json){
+                $.each(json,function (index, row) {
+                    var _html = '<label class="checkbox-inline">' ;
+                        _html +='   <input type="checkbox" name="category" value="'+row.id+'"> '+row.title;
+                        _html +='</label>';
+                    $('#'+el).append(_html)
+                })
+            });
+        }
+        $(function () {
+            $('#newCategory').on('click',function () {
+                $.getJSON('{% url "newcategory" %}',function (json) {
+                    layer.open({
+                        title:json.title,
+                        content:json.content,
+                        offset: '100px',
+                        btn: ['保存', '取消'],
+                        yes: function(index, layero){
+                            $('#form-category').submit();
+                        }
+                    })
+                });
+            });
+
+            load_categories('homeCatogery')
+        })
+    </script>
+{% endblock %}

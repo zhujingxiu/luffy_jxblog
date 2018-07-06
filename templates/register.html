@@ -1,0 +1,102 @@
+{% extends 'base/base.html' %}
+{% load staticfiles %}
+{% block title %}用户注册{% endblock %}
+
+{% block content %}
+    <div class="container">
+        <div class="row">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h3 class="text-center text-primary">用户注册</h3>
+                    </div>
+                    <div class="modal-body">
+                        <form class="form-horizontal" action="{% url 'register' %}" method="post" id="form-register">
+                            {% csrf_token %}
+                            <div class="form-group">
+                                <label for="inputUsername" class="col-sm-2 control-label">{{ form.username.label }}</label>
+                                <div class="col-sm-6">
+                                    <input type="text" id="inputUsername" class="form-control" name="{{ form.username.html_name }}" placeholder="用户名" value="{{ form.username.value }}">
+                                </div>
+                                <div class="col-sm-4">
+                                    <span class="help-block">{{ form.username.errors }}</span>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="inputPassword" class="col-sm-2 control-label">{{ form.password.label }}</label>
+                                <div class="col-sm-6">
+                                    <input type="password" id="inputPassword" class="form-control" name="{{ form.password.html_name }}" placeholder="密码" value="{{ form.password.value }}">
+                                </div>
+                                <div class="col-sm-4">
+                                    <span class="help-block">{{ form.password.errors }}</span>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="inputConfirm" class="col-sm-2 control-label">{{ form.confirm.label }}</label>
+                                <div class="col-sm-6">
+                                    <input type="password" id="inputConfirm" class="form-control" name="{{ form.confirm.html_name }}" placeholder="确认密码" value="{{ form.confirm.value }}">
+                                </div>
+                                <div class="col-sm-4">
+                                    <span class="help-block">{{ form.confirm.errors }}</span>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="inputEmail" class="col-sm-2 control-label">{{ form.email.label }}</label>
+                                <div class="col-sm-6">
+                                    <input type="email" id="inputEmail" class="form-control" name="{{ form.email.html_name }}" placeholder="邮箱" value="{{ form.email.value }}">
+                                </div>
+                                <div class="col-sm-4">
+                                    <span class="help-block">{{ form.email.errors }}</span>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="inputCaptcha" class="col-sm-2 control-label">{{ form.captcha.label }}</label>
+                                <div class="col-sm-3">
+                                    <input type="text" id="inputCaptcha" class="form-control" name="captcha_1" placeholder="验证码" >
+                                    <input type="hidden" id="inputHashkey" name="captcha_0" value="{{ hashkey }}">
+                                </div>
+                                <div class="col-sm-3 ">
+                                    <div class="pull-right">
+                                        <a id="newCaptcha" href="javascript:;" title="点击换一张"><img src="{{ image_url }}"> </a>
+                                    </div>
+                                </div>
+                                <div class="col-sm-4">
+                                    <span class="help-block">{{ form.captcha.errors }}</span>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="col-sm-12">
+                                    <button id="btn-reg" type="submit" class="btn btn-primary btn-lg btn-block">注册</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        <span class="pull-right"><a href="{% url 'login' %}">已有账户，立即登录</a></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block js %}
+<script>
+$('#newCaptcha').click(function (e) {
+    $.get("{% url 'newcaptcha' %}?t="+Math.random(),function(json){
+        $('#newCaptcha img').attr("src", json.image_url);
+        $('#inputHashkey').val(json.hashkey)
+    },'json');
+});
+$('#inputCaptcha').blur(function () {
+    var that = $(this);
+    $.get("{% url 'verify' %}",{'captcha':that.val(), 'hashkey': $('#inputHashkey').val()},function(json){
+        var el = that.parent().parent().find('.help-block');
+        el.empty();
+        if(json.status == 0){
+            el.html('验证码错误')
+        }
+    },'json');
+})
+</script>
+{% endblock %}

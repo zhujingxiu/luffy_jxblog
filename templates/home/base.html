@@ -1,0 +1,41 @@
+{% load staticfiles %}
+
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{% block title %}base{% endblock %} {{ user.username }} - 路飞博客</title>
+    <link rel="icon" href="data:image/ico;base64,aWNv">
+    <!-- Bootstrap -->
+    <link href="{% static 'lib/bootstrap3/css/bootstrap.min.css' %}" rel="stylesheet">
+    <link href="{% static 'css/docs.css' %}" rel="stylesheet">
+    <link href="{% static 'css/base.css' %}" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'lib/layer/skin/layer.css' %}">
+    {% if user.blog.theme %}
+    <link href="css/theme/{% static user.blog.theme %}" rel="stylesheet">
+    {% endif %}
+    <!--[if lt IE 9]>
+      <script src="https://cdn.bootcss.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+      <script src="https://cdn.bootcss.com/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+    {% block css %}{% endblock %}
+    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+    <script src="{% static 'js/jquery.min.js' %}"></script>
+    <!-- Include all compiled plugins (below), or include individual files as needed -->
+    <script src="{% static 'lib/bootstrap3/js/bootstrap.min.js' %}"></script>
+</head>
+<body>
+    {% include 'home/nav.html' %}
+    <div class="bs-docs-header">
+        <div class="container">
+            <h3>{{ user.username }}</h3>
+            <p>{{ user.blog.title }}</p>
+        </div>
+    </div>
+    {% block content %}{% endblock %}
+    <script type="text/javascript" src="{% static 'lib/layer/layer.js' %}"></script>
+    {% block js %}{% endblock %}
+</body>
+</html>

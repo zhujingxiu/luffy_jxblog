@@ -1,0 +1,33 @@
+
+.errorlist{
+    list-style: none;
+    text-align: left;
+    padding-left: 1px;
+}
+#box-login .help-block,#form-register .form-group .help-block{
+    color: #a94442;
+}
+#form-register .form-group:not(:last-child){
+    margin-left: 30px;
+}
+.bs-docs-section .page-header{
+    margin-top: 0px;
+}
+
+.shortcuts-affix{
+    position: fixed;
+    bottom: 16.66%;
+    left: 8.33%;
+}
+.breadcrumb{
+    background: #fafafa;
+}
+.help-tools > label{
+    width: 20%;
+    display: inline-block;
+    margin-left: 10px;
+}
+.list-sort{
+    font-size: 50%;
+    padding-top: 8px;
+}
