@@ -2,9 +2,9 @@ from django.shortcuts import render, HttpResponse, redirect, reverse
 from django.views.generic import View
 from django.http import JsonResponse
 from django.template.loader import render_to_string
-from django.core import serializers
+from users.models import UserInfo
 from blog.views import Auth
-from .models import Article, Category, Tag, Article2Category
+from .models import Article, Category, Tag, Article2Category, Comment
 from .forms import ArticleForm, CategoryForm
 
 
@@ -63,7 +63,7 @@ class ArticleNewView(Auth, View):
     '''
 
     def get(self, request):
-        return render(request, 'home/article.html', {'form': ArticleForm()})
+        return render(request, 'home/article.html', {'title': '添加文章','form': ArticleForm()})
 
     def post(self, request):
         form = ArticleForm(request.POST)
@@ -89,7 +89,12 @@ class ArticleDetailView(View):
     '''
 
     def get(self, request, username, article_id):
-        return render(request, 'home/article.html')
+        user = UserInfo.objects.filter(username=username).first()
+        blog = user.blog
+
+        article = Article.objects.filter(pk=article_id).first()
+        comments = Comment.objects.filter(article_id=article_id)
+        return render(request, 'home/detail.html', {'article': article, 'comments': comments})
 
 
 class ArticleDeleteView(View):
