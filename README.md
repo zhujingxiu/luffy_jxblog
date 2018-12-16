@@ -1,6 +1,7 @@
 # luffy_jxblog
 
 ### 作业题目: 开发BBS+BLOG系统
+```
 (py3web) E:\python\jxblog>pip list
 Package                Version
 ---------------------- ---------
@@ -25,3 +26,4 @@ setuptools             39.2.0
 six                    1.11.0
 urllib3                1.23
 wheel                  0.31.1
+```
